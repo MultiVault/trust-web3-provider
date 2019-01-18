@@ -156,6 +156,8 @@ class TrustWeb3Provider {
   }
 
   personal_sign(payload) {
+	console.log("signPersonalMessage");
+	console.log(payload);
     this.postMessage("signPersonalMessage", payload.id, {data: payload.params[0]});
   }
 
@@ -213,11 +215,12 @@ class TrustWeb3Provider {
 
   postMessage(handler, id, data) {
     if (this.ready || handler === "requestAccounts") {
-      window.webkit.messageHandlers[handler].postMessage({
-        "name": handler,
-        "object": data,
-        "id": id
-      });
+		console.log(handler);
+		window.webkit.messageHandlers.ReactNative.postMessage({
+        	"name": handler,
+        	"object": data,
+        	"id": id
+      	});
     } else {
       // don't forget to verify in the app
       this.sendError(id, new Error("provider is not ready"));
@@ -225,6 +228,7 @@ class TrustWeb3Provider {
   }
 
   sendResponse(id, result) {
+	console.log("sendResponse:", id, result);
     let originId = this.idMapping.tryPopId(id) || id;
     let callback = this.callbacks.get(id);
     let data = {jsonrpc: "2.0", id: originId};
